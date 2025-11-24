@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Sitio - PassSaver</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+    <div class="centered-layout">
+        <div class="card">
+            <h2 style="margin-bottom: 2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;">
+                Detalles del Sitio
+            </h2>
+            
+            <form id="form-site">
+                <input type="hidden" id="site-id">
+
+                <div class="form-group">
+                    <label>Nombre del Sitio</label>
+                    <input type="text" id="input-name" placeholder="Ej. Netflix">
+                </div>
+
+                <div class="form-group">
+                    <label>URL</label>
+                    <div style="position: relative;">
+                        <span class="material-icons-round" style="position:absolute; left:10px; top:10px; color: #9ca3af;">link</span>
+                        <input type="url" id="input-url" placeholder="https://..." style="padding-left: 35px;">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Usuario / Email</label>
+                    <div style="position: relative;">
+                        <span class="material-icons-round" style="position:absolute; left:10px; top:10px; color: #9ca3af;">person</span>
+                        <input type="text" id="input-user" placeholder="usuario@ejemplo.com" style="padding-left: 35px;">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="password" id="input-pass" placeholder="••••••••">
+                        <button type="button" id="btn-ver-pass" class="btn btn-secondary" title="Ver contraseña">
+                            <span class="material-icons-round">visibility</span>
+                        </button>
+                        <button type="button" id="btn-gen-pass" class="btn btn-secondary" title="Generar segura" style="color: var(--primary-color);">
+                            <span class="material-icons-round">vpn_key</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Descripción</label>
+                    <textarea id="input-desc" rows="4" placeholder="Notas adicionales..."></textarea>
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button type="button" class="btn btn-secondary" onclick="window.location.href='index.html'" style="flex: 1;">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary" style="flex: 2;">
+                        Guardar Cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="detalle.js"></script>
+</body>
+</html>

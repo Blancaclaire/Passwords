@@ -1,29 +1,117 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
+
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Pass Saver</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+  <link rel="stylesheet" href="index.css">
 </head>
-<body>
-  <main>
-    <ul></ul>
-  </main>
-  <script>
-    let drawData = (data) => {
-      data.forEach(category => {
-        let parent = document.getElementsByTagName('ul')[0]
-        let child = document.createElement('li')
-        // child.innerText = JSON.stringify(category)
-        child.innerText = category.name
-        parent.appendChild(child)
-      })
-    }
 
-    fetch("http://localhost:3000/categories")
-      .then(res => res.json())
-      .then(data => drawData(data))
-  </script>
+<body>
+
+  <div class="app-container">
+
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="material-icons-round">lock</span> PassSaver
+      </div>
+
+      <div class="user-profile">
+        <span class="material-icons-round" style="color: #9ca3af;">account_circle</span>
+        <div>
+          <div style="font-weight: 600;">Usuario</div>
+          <div style="font-size: 0.8em; color: var(--text-muted);">Admin</div>
+        </div>
+      </div>
+
+      <h3>Categorías</h3>
+      <ul id="lista-categorias" class="category-list">
+        <li class="category-item active">
+          <span style="display:flex; align-items:center; gap:8px;">
+            <span class="material-icons-round" style="font-size:18px">folder</span>
+            Todas
+          </span>
+        </li>
+      </ul>
+    </aside>
+
+    <main class="content-area">
+
+      <div class="top-bar">
+        <h1 class="page-title">Mis Contraseñas</h1>
+      </div>
+
+      <div class="action-bar">
+        <button id="btn-add-category" class="btn btn-secondary">
+          <span class="material-icons-round">create_new_folder</span>
+          Nueva Categoría
+        </button>
+        <button id="btn-add-site" class="btn btn-primary">
+          <span class="material-icons-round">add</span>
+          Nuevo Sitio
+        </button>
+
+        <div class="search-box">
+          <span class="material-icons-round"
+            style="position:absolute; left:10px; top:9px; color: #9ca3af;">search</span>
+          <input type="text" id="buscador" placeholder="Buscar sitio...">
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table class="site-table">
+          <thead>
+            <tr>
+              <th>Sitio / URL</th>
+              <th>Usuario</th>
+              <th>Actualizado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-sites">
+            <tr>
+              <td>
+                <div style="font-weight:600;">Google</div>
+                <div style="font-size:0.85em; color:var(--text-muted);">google.com</div>
+              </td>
+              <td>mi_correo@gmail.com</td>
+              <td>Hace 2 días</td>
+              <td class="actions-cell">
+                <button class="btn-icon" title="Abrir"><span class="material-icons-round">open_in_new</span></button>
+                <button class="btn-icon" title="Editar"><span class="material-icons-round">edit</span></button>
+                <button class="btn-icon delete" title="Eliminar"><span
+                    class="material-icons-round">delete</span></button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </main>
+  </div>
+  <dialog id="modal-categoria">
+    <div
+      style="background: #e0e7ff; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; color: var(--primary-color);">
+      <span class="material-icons-round">create_new_folder</span>
+    </div>
+
+    <h3>Nueva Categoría</h3>
+    <p>Introduce el nombre para organizar tus sitios.</p>
+
+    <div class="form-group" style="margin-bottom: 0;">
+      <label for="input-cat-name">Nombre</label>
+      <input type="text" id="input-cat-name" placeholder="Ej. Finanzas, Viajes..." autofocus>
+    </div>
+
+    <div class="dialog-actions">
+      <button id="btn-cancel-cat" class="btn btn-secondary">Cancelar</button>
+      <button id="btn-save-cat" class="btn btn-primary">Crear Categoría</button>
+    </div>
+  </dialog>
+
+  <script src="app.js"></script>
 </body>
+
 </html>
