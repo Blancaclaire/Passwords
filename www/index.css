@@ -91,15 +91,48 @@ body {
     transition: all 0.2s;
     color: var(--text-muted);
     font-weight: 500;
+    
+    /* NUEVO: Flexbox para separar texto y botón borrar */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.category-item:hover {
-    background-color: #f9fafb;
-    color: var(--primary-color);
+.category-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1; /* Ocupa todo el espacio posible */
 }
 
-.category-item.active {
-    background-color: #e0e7ff; /* Indigo muy claro */
+/* El botón de borrar (Oculto por defecto) */
+.btn-delete-cat {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--danger-color); /* Rojo definido en tus variables */
+    padding: 4px;
+    border-radius: 4px;
+    opacity: 0; /* INVISIBLE */
+    transform: translateX(10px); /* Un poco desplazado */
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-delete-cat:hover {
+    background-color: #fee2e2; /* Fondo rojo muy clarito */
+}
+
+/* LA MAGIA: Al pasar el ratón sobre la fila, aparece el botón */
+.category-item:hover .btn-delete-cat {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.category-item:hover, .category-item.active {
+    background-color: #e0e7ff;
     color: var(--primary-color);
 }
 
