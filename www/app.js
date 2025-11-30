@@ -7,20 +7,6 @@ const inputCatName = document.getElementById('input-cat-name');
 const btnAddSite = document.getElementById('btn-add-site');
 
 
-// Navegación a la página de detalle (Nuevo Sitio)
-btnAddSite.addEventListener('click', () => {
-    const categoryId = getSelectedCategoryId();
-    console.log(categoryId)
-    if(categoryId){
-        // Si hay un ID, lo adjuntamos a la URL como un parámetro de consulta
-        window.location.href = `detail.html?categoryId=${categoryId}`;
-    }
-    else {
-            // Opcional: Avisar al usuario si no ha seleccionado una categoría
-            alert('Por favor, selecciona una categoría válida antes de añadir un sitio.');
-        }
-    
-});
 
 
 //Modal Para crear nueva Categoria**********************************************
@@ -33,6 +19,16 @@ btnCancelCat.addEventListener('click', () => {
 
     modalCategoria.close();
     inputCatName.value = '';
+});
+
+//La función permite seleccionar una categoria y dejarla en estado active
+let clickCategorie = (item) => item.addEventListener('click', function () {
+    let categories = document.querySelectorAll('.category-item');
+    categories.forEach(cat => {
+        cat.classList.remove('active')
+    });
+    item.classList.add('active')
+    loadSitesByCategory(item.id)
 });
 
 
@@ -69,7 +65,7 @@ let drawCategories = (categories) => {
             e.stopPropagation();
             const confirmar = confirm(`¿Estás seguro de eliminar "${cat.name}"?`);
             if (confirmar) {
-                await eliminarCategoria(cat.id);
+                await deleteCategory(cat.id);
             }
         });
 
@@ -80,15 +76,7 @@ let drawCategories = (categories) => {
 
 
 
-//La función permite hacer click sobre el elemento que se desea seleccionar de manera visual
-let clickCategorie = (item) => item.addEventListener('click', function () {
-    let categories = document.querySelectorAll('.category-item');
-    categories.forEach(cat => {
-        cat.classList.remove('active')
-    });
-    item.classList.add('active')
-    loadSitesByCategory(item.id)
-});
+
 
 
 //app.get('/categories',listCategories)
@@ -103,7 +91,7 @@ loadCategories();
 
 
 
-//POST CATEGORY **********************************************************
+//POST CATEGORY *****//
 
 //Al pulsar el boton se llama a la funcion createCategory que es la que interactua con el server
 btnSaveCat.addEventListener('click', function () {
@@ -155,7 +143,7 @@ async function createCategory() {
 //DELETE CATEGORY
 
 //app.delete('/categories/:id',delCategory)
-async function eliminarCategoria(id) {
+async function deleteCategory(id) {
     try {
         const res = await fetch(`http://localhost:3000/categories/${id}`, {
             method: 'DELETE'
@@ -174,10 +162,43 @@ async function eliminarCategoria(id) {
 }
 
 
+//******************************SITES************************************************************************** */
+
+//Seleccionar el id de la categoria que ha sido seleccionada
+
+function getSelectedCategoryId() {
+    // Busca el elemento <li> que tenga la clase 'category-item' y la clase 'active'
+    const activeCategoryElement = document.querySelector('.category-list .category-item.active');
+
+    // Verifica si el elemento existe y si tiene un ID válido
+    if (activeCategoryElement && activeCategoryElement.id) {
+        return activeCategoryElement.id;
+    }
+    else {
+        return console.log('La categoria seleccionada tiene un id nulo');
+    }
+
+}
+
+
+// Navegación a la página de detalle (Nuevo Sitio)
+btnAddSite.addEventListener('click', () => {
+    const categoryId = getSelectedCategoryId();
+    console.log(categoryId)
+    if (categoryId) {
+        // Si hay un ID, lo adjuntamos a la URL como un parámetro de consulta
+        window.location.href = `detail.html?categoryId=${categoryId}`;
+    }
+    else {
+        // Opcional: Avisar al usuario si no ha seleccionado una categoría
+        alert('Por favor, selecciona una categoría válida antes de añadir un sitio.');
+    }
+
+});
+
+
 //GET SITES asociados a una category
 //app.get('/categories/:id', listCategorySites)
-
-
 function drawSites(sites) {
     const tbody = document.getElementById('tabla-sites');
     tbody.innerHTML = '';
@@ -202,6 +223,15 @@ function drawSites(sites) {
     
     `;
 
+        const deleteBt = fila.querySelector('.delete');
+        deleteBt.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            const confirmar = confirm(`¿Estás seguro de eliminar "${site.name}"?`);
+            if (confirmar) {
+                await deleteSite(site.id);
+            }
+        });
+
         tbody.appendChild(fila);
     });
 
@@ -218,21 +248,28 @@ async function loadSitesByCategory(categoryId) {
 }
 
 
+async function deleteSite(id) {
+    try {
+        const response = await fetch(`http://localhost:3000/sites/${id}`,
+            {
+                method: 'DELETE'
+            }
 
-//seleccionar el id de la categoria que h sido seleccionada
-
-function getSelectedCategoryId() {
-    // Busca el elemento <li> que tenga la clase 'category-item' y la clase 'active'
-    const activeCategoryElement = document.querySelector('.category-list .category-item.active');
-
-    // Verifica si el elemento existe y si tiene un ID válido
-    if (activeCategoryElement && activeCategoryElement.id) {
-        return activeCategoryElement.id;
+        );
+        if (response.ok) {
+            const currentCategoryId = getSelectedCategoryId();
+            if(currentCategoryId){
+                      loadSitesByCategory(currentCategoryId)
+            }
+      
+        }
+        else {
+            alert('Error al eliminar la site')
+        }
     }
-    else{
-        return console.log('La categoria seleccionada tiene un di nulo');
+    catch (error) {
+        console.error(error);
     }
-    
 }
 
 
