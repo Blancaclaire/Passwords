@@ -42,9 +42,10 @@ btGenPass.addEventListener('click', function () {
 })
 
 
+
+
 // POST SITE BY CATEGORY
 
-// createSite();
 
 
 const sbButton = document.querySelector('.btn-primary');
@@ -55,6 +56,8 @@ sbButton.addEventListener('click', function (e) {
     createSite();
     window.location.href = 'index.html';
 })
+
+
 
 
 

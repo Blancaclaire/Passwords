@@ -214,7 +214,7 @@ function drawSites(sites) {
     <td>${site.user}</td>
     <td>${new Date(site.updatedAt).toLocaleDateString()}</td>
     <td class="actions-cell">
-        <button class="btn-icon" title="Abrir"><span class="material-icons-round">open_in_new</span></button>
+        <button class="btn-icon open" title="Abrir"><span class="material-icons-round">open_in_new</span></button>
         <button class="btn-icon" title="Editar"><span class="material-icons-round">edit</span></button>
         <button class="btn-icon delete" title="Eliminar"><span
         class="material-icons-round">delete</span></button>
@@ -231,6 +231,12 @@ function drawSites(sites) {
                 await deleteSite(site.id);
             }
         });
+
+        //te redirecciona a la site que quieres
+        const openBt = fila.querySelector('.open');
+        openBt.addEventListener('click', function(){
+            window.location.href = site.url;
+        })
 
         tbody.appendChild(fila);
     });
