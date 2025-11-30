@@ -48,15 +48,13 @@ btGenPass.addEventListener('click', function () {
 
 // POST SITE BY CATEGORY
 
-
-
 const sbButton = document.querySelector('.btn-primary');
 
 
 sbButton.addEventListener('click', function (e) {
     e.preventDefault();
     createSite();
-    window.location.href = 'index.html';
+
 })
 
 
@@ -105,26 +103,16 @@ async function createSite() {
 
         await api.createSite(categoryId, siteData);
 
-        if (response.ok) {
-            console.log('site guardado correctamente');
-            Name.value = '';
-            URL.value = '';
-            UserEmail.value = '';
-            Password.value = '';
-            Description.value = '';
+        console.log('Site guardado correctamente');
 
-        }
-        else {
-            console.error('Error al crear el site asociado a esta categoria')
-        }
+
+        window.location.href = `index.html?openCat=${categoryId}`;
+      
     }
     catch (error) {
         console.error(error)
     }
 
 };
-
-
-
 
 

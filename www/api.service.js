@@ -5,7 +5,6 @@ class ApiService {
         this.baseUrl = baseUrl;
     }
 
-    // Método auxiliar privado para manejar las respuestas
     async _handleResponse(response) {
         if (!response.ok) {
             const text = await response.text();
