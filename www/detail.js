@@ -1,3 +1,5 @@
+const api = new ApiService('http://localhost:3000');
+
 // TOOGLE PASSWORD VISIBLE/NO-VISIBLE
 const btnVerPass = document.getElementById('btn-ver-pass');
 const inputPass = document.getElementById('input-pass');
@@ -58,10 +60,6 @@ sbButton.addEventListener('click', function (e) {
 })
 
 
-
-
-
-
 async function createSite() {
 
     const Name = document.getElementById('input-name').value.trim();
@@ -97,13 +95,15 @@ async function createSite() {
     }
 
     try {
-        const response = await fetch(`http://localhost:3000/categories/${categoryId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(siteData)
-        })
+        // const response = await fetch(`http://localhost:3000/categories/${categoryId}`, {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify(siteData)
+        // })
+
+        await api.createSite(categoryId, siteData);
 
         if (response.ok) {
             console.log('site guardado correctamente');

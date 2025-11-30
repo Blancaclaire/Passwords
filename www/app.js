@@ -1,3 +1,6 @@
+const api = new ApiService('http://localhost:3000');
+
+
 // Referencias
 const btnAddCategory = document.getElementById('btn-add-category');
 const modalCategoria = document.getElementById('modal-categoria');
@@ -5,7 +8,6 @@ const btnCancelCat = document.getElementById('btn-cancel-cat');
 const btnSaveCat = document.getElementById('btn-save-cat');
 const inputCatName = document.getElementById('input-cat-name');
 const btnAddSite = document.getElementById('btn-add-site');
-
 
 
 
@@ -33,6 +35,36 @@ let clickCategorie = (item) => item.addEventListener('click', function () {
 
 
 //Mostrar Categories**********************************************************
+
+
+async function loadCategories() {
+    try {
+//  async function loadCategories() {
+//     fetch("http://localhost:3000/categories")
+//         .then(res => res.json())
+//         .then(data => drawCategories(data))
+
+        const data = await api.getCategories();
+        
+        allCategories = data;
+        drawCategories(data);
+        
+        // Auto-apertura si venimos de detail
+        const urlParams = new URLSearchParams(window.location.search);
+        const catIdToOpen = urlParams.get('openCat');
+        if (catIdToOpen) {
+            const categoryElement = document.getElementById(catIdToOpen);
+            if (categoryElement) {
+                categoryElement.click();
+                window.history.replaceState({}, document.title, "index.html");
+            }
+        }
+    } catch (error) {
+        console.error("Error cargando categorías:", error);
+    }
+}
+
+
 
 //app.get('/categories',listCategories)
 let drawCategories = (categories) => {
@@ -75,20 +107,7 @@ let drawCategories = (categories) => {
 }
 
 
-
-
-
-
-//app.get('/categories',listCategories)
-async function loadCategories() {
-    fetch("http://localhost:3000/categories")
-        .then(res => res.json())
-        .then(data => drawCategories(data))
-
-}
-
 loadCategories();
-
 
 
 //POST CATEGORY *****//
@@ -98,66 +117,69 @@ btnSaveCat.addEventListener('click', function () {
     createCategory();
 })
 
-//app.post('/categories', addNewCategory)
 async function createCategory() {
-
-    const input = document.getElementById('input-cat-name');
-    const categoryName = input.value.trim();
-
+    const categoryName = inputCatName.value.trim();
     if (!categoryName) {
-        input.style.border = "red";
-        alert('Por favor rellena el campo')
-        return
+        alert('Por favor rellena el nombre');
+        return;
     }
+
     try {
-        const response = await fetch('http://localhost:3000/categories', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                name: categoryName
-            })
+//         const response = await fetch('http://localhost:3000/categories', {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json'
+//             },
+//             body: JSON.stringify({
+//                 name: categoryName
+//             })
 
-        });
+//         });
 
-        if (response.ok) {
-            console.log('categoria guardada')
-            modalCategoria.close();
-            input.value = '';
-            input.style.border = '';
-            loadCategories();
-        } else {
-            console.error('Error 400: El servidor rechazó los datos. Revisa el body/headers.');
-        }
+//         if (response.ok) {
+//             console.log('categoria guardada')
+//             modalCategoria.close();
+//             input.value = '';
+//             input.style.border = '';
+//             loadCategories();
+//         } else {
+//             console.error('Error 400: El servidor rechazó los datos. Revisa el body/headers.');
+//         }        
 
+        await api.createCategory(categoryName);
+        modalCategoria.close();
+        inputCatName.value = '';
+        loadCategories();
+        
+    } catch (error) {
+        console.error(error);
+        alert('Error al crear categoría');
     }
-    catch (error) {
-        console.error(error)
-
-    }
-
-
 }
+
 
 //DELETE CATEGORY
 
-//app.delete('/categories/:id',delCategory)
 async function deleteCategory(id) {
     try {
-        const res = await fetch(`http://localhost:3000/categories/${id}`, {
-            method: 'DELETE'
-        });
+//         const res = await fetch(`http://localhost:3000/categories/${id}`, {
+//             method: 'DELETE'
+//         });
 
-        if (res.ok) {
-            // Si se borra bien, recargamos la lista
-            loadCategories();
-        } else {
-            alert("Error al eliminar la categoría");
-        }
+//         if (res.ok) {
+//             // Si se borra bien, recargamos la lista
+//             loadCategories();
+//         } else {
+//             alert("Error al eliminar la categoría");
+//         }
+
+        await api.deleteCategory(id);
+        
+        loadCategories();
+        document.getElementById('tabla-sites').innerHTML = '';
     } catch (error) {
         console.error(error);
-        alert("Error de conexión");
+        alert("Error al eliminar la categoría");
     }
 }
 
@@ -198,6 +220,21 @@ btnAddSite.addEventListener('click', () => {
 
 
 //GET SITES asociados a una category
+
+async function loadSitesByCategory(categoryId) {
+    if (!categoryId) return;
+//     fetch(`http://localhost:3000/categories/${categoryId}`)
+//         .then(res => res.json())
+//         .then(data => drawSites(data.sites));
+    try {
+
+        const data = await api.getSitesByCategory(categoryId);
+        drawSites(data.sites, false);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 //app.get('/categories/:id', listCategorySites)
 function drawSites(sites) {
     const tbody = document.getElementById('tabla-sites');
@@ -244,39 +281,31 @@ function drawSites(sites) {
 
 }
 
-async function loadSitesByCategory(categoryId) {
-
-    if (!categoryId) return;
-
-    fetch(`http://localhost:3000/categories/${categoryId}`)
-        .then(res => res.json())
-        .then(data => drawSites(data.sites));
-}
 
 
-async function deleteSite(id) {
+async function deleteSite(siteId) {
     try {
-        const response = await fetch(`http://localhost:3000/sites/${id}`,
-            {
-                method: 'DELETE'
-            }
+//      const response = await fetch(`http://localhost:3000/sites/${id}`,
+//         {
+//              method: 'DELETE'
+//          }        
 
-        );
-        if (response.ok) {
-            const currentCategoryId = getSelectedCategoryId();
-            if(currentCategoryId){
-                      loadSitesByCategory(currentCategoryId)
-            }
-      
+
+        await api.deleteSite(siteId);
+
+        const currentCatId = getSelectedCategoryId();
+        if (currentCatId) {
+            loadSitesByCategory(currentCatId);
+        } else {
+            inputBuscador.dispatchEvent(new Event('input'));
         }
-        else {
-            alert('Error al eliminar la site')
-        }
-    }
-    catch (error) {
+    } catch (error) {
         console.error(error);
+        alert('Error al eliminar el sitio');
     }
 }
+
+
 
 
 // BUSCADOR POR CATEGORIA Y SITIO********************************************
@@ -302,10 +331,9 @@ if (inputBuscador) {
 
         try {
 
-            const response = await fetch("http://localhost:3000/sites")
-            .then(res=>res.json());
+            const allSites = await api.getAllSites();
          
-            const sitiosEncontrados = response.filter(site => {
+            const sitiosEncontrados = allSites.filter(site => {
                 return (site.name && site.name.toLowerCase().includes(termino)) ||
                        (site.url && site.url.toLowerCase().includes(termino)) ||
                        (site.user && site.user.toLowerCase().includes(termino));
