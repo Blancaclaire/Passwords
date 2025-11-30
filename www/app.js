@@ -7,13 +7,10 @@ const inputCatName = document.getElementById('input-cat-name');
 const btnAddSite = document.getElementById('btn-add-site');
 
 
-
-
-
 // Navegación a la página de detalle (Nuevo Sitio)
 btnAddSite.addEventListener('click', () => {
     const categoryId = getSelectedCategoryId();
-    console.log(categoryId.value)
+    console.log(categoryId)
     if(categoryId){
         // Si hay un ID, lo adjuntamos a la URL como un parámetro de consulta
         window.location.href = `detail.html?categoryId=${categoryId}`;
@@ -25,11 +22,6 @@ btnAddSite.addEventListener('click', () => {
     
 });
 
-
-
-//****************TEORIA***************************************************************/
-//La etiqueta <dialog> javascript viene con funciones predefinidas showModal() y close()
-//************************************************************************************/
 
 //Modal Para crear nueva Categoria**********************************************
 
@@ -123,9 +115,6 @@ async function createCategory() {
 
     const input = document.getElementById('input-cat-name');
     const categoryName = input.value.trim();
-
-
-    console.log(categoryName);
 
     if (!categoryName) {
         input.style.border = "red";
@@ -240,7 +229,10 @@ function getSelectedCategoryId() {
     if (activeCategoryElement && activeCategoryElement.id) {
         return activeCategoryElement.id;
     }
-    return null;
+    else{
+        return console.log('La categoria seleccionada tiene un di nulo');
+    }
+    
 }
 
 
