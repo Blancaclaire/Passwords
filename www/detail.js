@@ -25,6 +25,7 @@ if (btnVerPass && inputPass) {
 }
 
 
+//Generar contraseña segura
 const btGenPass = document.getElementById('btn-gen-pass');
 
 btGenPass.addEventListener('click', function () {
@@ -43,7 +44,44 @@ btGenPass.addEventListener('click', function () {
 
 })
 
+//validaciones formulario
 
+const camposAValidar = [
+    { id: 'input-name', min: 3 }, 
+    { id: 'input-pass', min: 6 }, 
+    { id: 'input-user', min: 3 },
+    { id: 'input-url',  min: 5 }
+];
+
+camposAValidar.forEach(regla => {
+    const input = document.getElementById(regla.id);
+    
+    if (input) {
+        //  Se dispara cuando sales de la casilla
+        input.addEventListener('blur', () => {
+            const texto = input.value.trim();
+            
+            // Si hay algo escrito PERO es más corto del mínimo
+            if (texto.length > 0 && texto.length < regla.min) {
+                input.style.borderColor = 'var(--danger-color)'; 
+                input.style.backgroundColor = '#fef2f2';         
+            } else {
+                limpiarEstilo(input);
+            }
+        });
+
+        // 2. Evento INPUT: Se dispara mientras escribes
+        // Si el usuario empieza a corregirlo, quitamos el rojo inmediatamente
+        input.addEventListener('input', () => {
+            limpiarEstilo(input);
+        });
+    }
+});
+
+function limpiarEstilo(elemento) {
+    elemento.style.borderColor = '';
+    elemento.style.backgroundColor = '';
+}
 
 
 // POST SITE BY CATEGORY
@@ -75,6 +113,12 @@ async function createSite() {
     if (!Name || !URL || !UserEmail || !Password) {
 
         alert('Rellena los campos obligatorios por favor (*)')
+        return;
+    }
+
+    //Validación condiciones de campo
+    if (Name.length < 3 || Password.length < 6) {
+        alert("Revisa los campos marcados en rojo. Algunos datos son muy cortos.");
         return;
     }
 
