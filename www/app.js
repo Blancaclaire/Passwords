@@ -273,7 +273,43 @@ async function deleteSite(id) {
 }
 
 
+// BUSCADOR POR CATEGORIA Y SITIO********************************************
+
+const inputBuscador = document.getElementById('buscador');
+
+if (inputBuscador) {
+    inputBuscador.addEventListener('input', async (e) => {
+        const termino = e.target.value.toLowerCase().trim();
+
+        // Filtro Categorias. Ocultamos las categorías que no coincidan por estética
+        const categorias = document.querySelectorAll('.category-item');
+        categorias.forEach(cat => {
+            const textoCat = cat.querySelector('span').innerText.toLowerCase();
+            if (textoCat.includes(termino)) {
+                cat.style.display = 'flex';
+            } else {
+                cat.style.display = 'none';
+            }
+        });
+
+        //Busqueda por Sitios
+
+        try {
+
+            const response = await fetch("http://localhost:3000/sites")
+            .then(res=>res.json());
+         
+            const sitiosEncontrados = response.filter(site => {
+                return (site.name && site.name.toLowerCase().includes(termino)) ||
+                       (site.url && site.url.toLowerCase().includes(termino)) ||
+                       (site.user && site.user.toLowerCase().includes(termino));
+            });
+
+            drawSites(sitiosEncontrados);
 
 
-
-
+        } catch (error) {
+            console.error("Error en el buscador:", error);
+        }
+    });
+}

@@ -1,3 +1,46 @@
+// TOOGLE PASSWORD VISIBLE/NO-VISIBLE
+const btnVerPass = document.getElementById('btn-ver-pass');
+const inputPass = document.getElementById('input-pass');
+
+if (btnVerPass && inputPass) {
+    btnVerPass.addEventListener('click', () => {
+
+        const icon = btnVerPass.querySelector('span');
+
+
+        if (inputPass.type === 'password') {
+
+            inputPass.type = 'text';
+            icon.textContent = 'visibility_off';
+            btnVerPass.title = "Ocultar contraseña";
+        } else {
+
+            inputPass.type = 'password';
+            icon.textContent = 'visibility';
+            btnVerPass.title = "Ver contraseña";
+        }
+    });
+}
+
+
+const btGenPass = document.getElementById('btn-gen-pass');
+
+btGenPass.addEventListener('click', function () {
+
+    const longitud = 8;
+    const caracteres = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_-+=<>?";
+
+    let passwordGenerada = "";
+
+    for (let index = 0; index < longitud; index++) {
+        const randomIndex = Math.floor(Math.random() * caracteres.length);
+        passwordGenerada += caracteres.charAt(randomIndex);
+    }
+
+    inputPass.value = passwordGenerada;
+
+})
+
 
 // POST SITE BY CATEGORY
 
